@@ -1,23 +1,43 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <typeinfo> //* bib para descobrir o tipo de certas variaveis, usa "typeid(<variavel>).name" para conseguir o nome
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    sf::RenderWindow window(sf::VideoMode(512, 512), "SFML!", sf::Style::Close | sf::Style::Titlebar);
 
-    while (window.isOpen())
+    sf::RectangleShape player(sf::Vector2f(100.0f, 100.0f));//* estes valores são o tamanho do retangulo, não a posição
+    player.setFillColor(sf::Color::Cyan);
+
+    while (window.isOpen())//! cada iteração aqui é um frame
     {
-        sf::Event event;
-        while (window.pollEvent(event))
+        sf::Event evnt;
+        while (window.pollEvent(evnt))
         {
-            if (event.type == sf::Event::Closed)
+            switch (evnt.type)
+            {
+            case sf::Event::Closed:
+                
                 window.close();
-        } 
 
-        window.clear();
-        window.draw(shape);
-        window.display();
+                break;
+
+            case sf::Event::TextEntered:
+                
+                char input = evnt.text.unicode;
+
+                //? sim, é possivel comparar char com int
+                if (input < 128)  printf("%c", input);
+                
+                break;
+            }
+        }
+
+    //? renderiza algo para a tela, modificando-a
+    window.draw(player);
+
+    //? recarrega a tela, fazendo com que as mudanças sejam efetivadas
+    window.display();
     }
 
     return 0;
