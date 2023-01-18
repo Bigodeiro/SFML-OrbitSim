@@ -81,16 +81,13 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGTH), "SFML!", sf::Style::Close | sf::Style::Titlebar);
 
-    circleObj meio (WIDTH/2, HEIGTH/2, 5, 80, sf::Color::White);
+    circleObj vermelho(1000, HEIGTH/2, 10, 5, sf::Color::Red);
+    vermelho.velocity.y = 0.05f;
 
-    circleObj vermelho(400, 200, 10, 1, sf::Color::Red);
-    vermelho.velocity.y = 0.15f;
-    circleObj verde(400, 600, 10, 1, sf::Color::Green);
-    verde.velocity.x = 0.15f;
-    circleObj azul(800, 600, 10, 1, sf::Color::Blue);
-    azul.velocity.y = - 0.15f;
-    circleObj amarelo(800, 200, 10, 1, sf::Color::Yellow);
-    amarelo.velocity.x = - 0.15f;
+    circleObj verde(200, HEIGTH/2, 10, 5, sf::Color::Green);
+    verde.velocity.y = - 0.05f;
+
+    circleObj meio(WIDTH/2, HEIGTH/2, 3, 8, sf::Color::White);
 
 
     while (window.isOpen())//! cada iteração aqui é um frame
@@ -108,47 +105,57 @@ int main()
             }
         }
 
+    //!codigo a ser executado todo frame
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+    {
+        meio.pos.x -= 0.05f;
+    }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+    {
+        meio.pos.x += 0.05f;
+    }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+    {
+        meio.pos.y -= 0.05f;
+    }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+    {
+        meio.pos.y += 0.05f;
+    }
+    
+
+
+    vermelho = grav(verde, vermelho);
+    verde = grav(vermelho, verde);
+    vermelho = grav(meio, vermelho);
+    verde = grav(meio, verde);
+
     window.clear();
 
-    //!codigo a ser executado todo frame
-    
-    // vermelho = grav(verde, vermelho);
-    // vermelho = grav(azul, vermelho);
-    // vermelho = grav(amarelo, vermelho);
-
-    // azul = grav(verde, azul);
-    // azul = grav(vermelho, azul);
-    // azul = grav(amarelo, azul);
-
-    // verde = grav(azul, verde);
-    // verde = grav(vermelho, verde);
-    // verde = grav(amarelo, verde);
-
-    // amarelo = grav(verde, amarelo);
-    // amarelo = grav(vermelho, amarelo);
-    // amarelo = grav(azul, amarelo);
-
-    amarelo  = grav(meio, amarelo);
-    verde    = grav(meio, verde);
-    vermelho = grav(meio, vermelho);
-    azul     = grav(meio, azul);
-
     //? renderiza algo para a tela, modificando-a
+    
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
+    {
+        vermelho = circleObj(1000, HEIGTH/2, 10, 5, sf::Color::Red);
+        vermelho.velocity.y = 0.05f;
+        vermelho.velocity.x = 0;
+
+        verde = circleObj (200, HEIGTH/2, 10, 5, sf::Color::Green);
+        verde.velocity.y = - 0.05f;
+        verde.velocity.x = 0;
+
+        circleObj meio(WIDTH/2, HEIGTH/2, 3, 8, sf::Color::White);
+    }
+
     vermelho.applyChanges();
     window.draw(vermelho.sfCircle);
 
     verde.applyChanges();
     window.draw(verde.sfCircle);
 
-    azul.applyChanges();
-    window.draw(azul.sfCircle);
-    
-    amarelo.applyChanges();
-    window.draw(amarelo.sfCircle);
-
     meio.applyChanges();
     window.draw(meio.sfCircle);
-
 
     //? recarrega a tela, fazendo com que as mudanças sejam efetivadas
     window.display();

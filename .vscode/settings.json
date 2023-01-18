@@ -1,5 +1,14 @@
 {
     "files.associations": {
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "*.tcc": "cpp"
+    },
+    "files.exclude": {
+        "*.dll"     : true,
+        "*.exe"     : true,
+        "*.o"       : true,
+        "src"       : true,
+        ".vscode"   : true,
+        ".gitignore": true
     }
 }
