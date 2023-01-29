@@ -3,8 +3,8 @@
 #include <typeinfo> //* bib para descobrir o tipo de certas variaveis, usa "typeid(<variavel>).name" para conseguir o nome
 #include <cmath>
 #include <math.h>
-#define WIDTH 1200
-#define HEIGTH 800
+#define WIDTH 1800
+#define HEIGTH 1000
 
 class cord 
 {
@@ -21,7 +21,7 @@ class circleObj
     int mass;
     float radius;
 
-    cord pos;
+    sf::Vector2f pos;
     cord velocity;
 
     sf::CircleShape sfCircle;
@@ -77,19 +77,31 @@ circleObj grav(circleObj corpoFixo, circleObj corpoMovel)
     return corpoMovel;
 }
 
+float lerp(float a, float b, float t)
+{
+    float tot = a + b;
+    float result = tot * t;
 
+    return result;    
+}
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGTH), "SFML!", sf::Style::Close | sf::Style::Titlebar);
 
-    circleObj vermelho(1000, HEIGTH/2, 10, 5, sf::Color::Red);
+    circleObj vermelho(WIDTH/2 - 400, HEIGTH/2, 10, 5, sf::Color::Red);
     vermelho.velocity.y = -0.05f;
 
-    circleObj amarelo(600, HEIGTH/2, 10, 5, sf::Color::Yellow);
+    circleObj amarelo(WIDTH/2, HEIGTH/2, 10, 5, sf::Color::Yellow);
 
-    circleObj verde(200, HEIGTH/2, 10, 5, sf::Color::Green);
+    circleObj verde(WIDTH/2 + 400, HEIGTH/2, 10, 5, sf::Color::Green);
     verde.velocity.y = 0.05f;
+
+    circleObj pontoMedio1 (0, 0, 3, 0, sf::Color::White);
+    circleObj pontoMedio2 (0, 0, 3, 0, sf::Color::White);
+    circleObj pontoMedio3 (0, 0, 3, 0, sf::Color::White);
+
+    sf::Vector2f teste(15,2);
 
     sf::Vertex lines[] =
     {
@@ -101,9 +113,15 @@ int main()
         sf::Vector2f(0, 0)
     };
 
-    
-
-
+    sf::Vertex lines2[] =
+    {
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0)
+    };
 
     while (window.isOpen())//! cada iteração aqui é um frame
     {
@@ -121,10 +139,6 @@ int main()
         }
 
     //!codigo a ser executado todo frame
-
-    
-
-
 
     vermelho = grav(verde, vermelho);
     verde = grav(vermelho, verde);
@@ -164,16 +178,38 @@ int main()
     lines[4] = sf::Vector2f(vermelho.pos.x, vermelho.pos.y);
     lines[5] = sf::Vector2f(amarelo.pos.x, amarelo.pos.y);
 
+    pontoMedio1.pos = sf::Vector2f( lerp(vermelho.pos.x, verde.pos.x, 0.5), lerp(vermelho.pos.y, verde.pos.y, 0.5));
+    pontoMedio2.pos = sf::Vector2f( lerp(amarelo.pos.x, verde.pos.x, 0.5), lerp(amarelo.pos.y, verde.pos.y, 0.5));
+    pontoMedio3.pos = sf::Vector2f( lerp(vermelho.pos.x, amarelo.pos.x, 0.5), lerp(vermelho.pos.y, amarelo.pos.y, 0.5));
 
+    lines2[0] = sf::Vector2f(vermelho.pos.x, vermelho.pos.y);
+    lines2[1] = sf::Vector2f(pontoMedio2.pos.x, pontoMedio2.pos.y);
+
+    lines2[2] = sf::Vector2f(verde.pos.x, verde.pos.y);
+    lines2[3] = sf::Vector2f(pontoMedio3.pos.x, pontoMedio3.pos.y);
+
+    lines2[4] = sf::Vector2f(amarelo.pos.x, amarelo.pos.y);
+    lines2[5] = sf::Vector2f(pontoMedio1.pos.x, pontoMedio1.pos.y);
+
+    pontoMedio1.applyChanges();
+    pontoMedio2.applyChanges();
+    pontoMedio3.applyChanges();
+
+
+    window.draw(pontoMedio1.sfCircle);
+    window.draw(pontoMedio2.sfCircle);
+    window.draw(pontoMedio3.sfCircle);
+
+    window.draw(lines, 6, sf::Lines);
+    window.draw(lines2, 6, sf::Lines);
     window.draw(vermelho.sfCircle);
     window.draw(verde.sfCircle);
     window.draw(amarelo.sfCircle);
-    window.draw(lines, 6, sf::Lines);
 
 
     //? recarrega a tela, fazendo com que as mudanças sejam efetivadas
     window.display();
-    }
 
+    }
     return 0;
 }
