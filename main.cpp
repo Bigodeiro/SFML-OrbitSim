@@ -77,17 +77,32 @@ circleObj grav(circleObj corpoFixo, circleObj corpoMovel)
     return corpoMovel;
 }
 
+
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGTH), "SFML!", sf::Style::Close | sf::Style::Titlebar);
 
     circleObj vermelho(1000, HEIGTH/2, 10, 5, sf::Color::Red);
-    vermelho.velocity.y = 0.05f;
+    vermelho.velocity.y = -0.05f;
+
+    circleObj amarelo(600, HEIGTH/2, 10, 5, sf::Color::Yellow);
 
     circleObj verde(200, HEIGTH/2, 10, 5, sf::Color::Green);
-    verde.velocity.y = - 0.05f;
+    verde.velocity.y = 0.05f;
 
-    circleObj meio(WIDTH/2, HEIGTH/2, 3, 8, sf::Color::White);
+    sf::Vertex lines[] =
+    {
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0),
+        sf::Vector2f(0, 0)
+    };
+
+    
+
 
 
     while (window.isOpen())//! cada iteração aqui é um frame
@@ -107,29 +122,16 @@ int main()
 
     //!codigo a ser executado todo frame
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-    {
-        meio.pos.x -= 0.05f;
-    }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-    {
-        meio.pos.x += 0.05f;
-    }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-    {
-        meio.pos.y -= 0.05f;
-    }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-    {
-        meio.pos.y += 0.05f;
-    }
     
+
 
 
     vermelho = grav(verde, vermelho);
     verde = grav(vermelho, verde);
-    vermelho = grav(meio, vermelho);
-    verde = grav(meio, verde);
+    vermelho = grav(amarelo, vermelho);
+    verde = grav(amarelo, verde);
+    amarelo = grav(verde, amarelo);
+    amarelo = grav(vermelho, amarelo);
 
     window.clear();
 
@@ -149,13 +151,25 @@ int main()
     }
 
     vermelho.applyChanges();
-    window.draw(vermelho.sfCircle);
-
     verde.applyChanges();
-    window.draw(verde.sfCircle);
+    amarelo.applyChanges();
 
-    meio.applyChanges();
-    window.draw(meio.sfCircle);
+
+    lines[0] = sf::Vector2f(vermelho.pos.x, vermelho.pos.y);
+    lines[1] = sf::Vector2f(verde.pos.x, verde.pos.y);
+
+    lines[2] = sf::Vector2f(verde.pos.x, verde.pos.y);
+    lines[3] = sf::Vector2f(amarelo.pos.x, amarelo.pos.y);
+
+    lines[4] = sf::Vector2f(vermelho.pos.x, vermelho.pos.y);
+    lines[5] = sf::Vector2f(amarelo.pos.x, amarelo.pos.y);
+
+
+    window.draw(vermelho.sfCircle);
+    window.draw(verde.sfCircle);
+    window.draw(amarelo.sfCircle);
+    window.draw(lines, 6, sf::Lines);
+
 
     //? recarrega a tela, fazendo com que as mudanças sejam efetivadas
     window.display();
