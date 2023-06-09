@@ -6,14 +6,6 @@
 #define WIDTH 1800
 #define HEIGTH 1000
 
-class cord 
-{
-  public:
-
-    float x;
-    float y;
-};
-
 class circleObj 
 {
   public:
@@ -22,7 +14,7 @@ class circleObj
     float radius;
 
     sf::Vector2f pos;
-    cord velocity;
+    sf::Vector2f velocity;
 
     sf::CircleShape sfCircle;
     sf::Color color;
@@ -153,15 +145,13 @@ int main()
     
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
     {
-        vermelho = circleObj(1000, HEIGTH/2, 10, 5, sf::Color::Red);
-        vermelho.velocity.y = 0.05f;
-        vermelho.velocity.x = 0;
+        vermelho = circleObj(WIDTH/2 - 400, HEIGTH/2, 10, 5, sf::Color::Red);
+        vermelho.velocity.y = -0.05f;
 
-        verde = circleObj (200, HEIGTH/2, 10, 5, sf::Color::Green);
-        verde.velocity.y = - 0.05f;
-        verde.velocity.x = 0;
+        amarelo = circleObj(WIDTH/2, HEIGTH/2, 10, 5, sf::Color::Yellow);
 
-        circleObj meio(WIDTH/2, HEIGTH/2, 3, 8, sf::Color::White);
+        verde = circleObj(WIDTH/2 + 400, HEIGTH/2, 10, 5, sf::Color::Green);
+        verde.velocity.y = 0.05f;
     }
 
     vermelho.applyChanges();
